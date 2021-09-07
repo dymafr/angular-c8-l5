@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 interface User {
@@ -14,7 +14,7 @@ interface User {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public user: BehaviorSubject<User | null> = new BehaviorSubject(null);
+  public user: ReplaySubject<User> = new ReplaySubject(1);
 
   ngOnInit() {
     this.user.next({
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 
     const s1 = this.user
       .pipe(
-        filter((user: User | null) => user != null), // la fonction passée à filter doit retourner un booléen
+        filter((user: User) => user != null), // la fonction passée à filter doit retourner un booléen
         map((user: User) => `${user.firstName} ${user.lastName}`)
       )
       .subscribe((fullName: string) => console.log('[s1] : ', fullName));
